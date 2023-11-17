@@ -16,7 +16,7 @@ model User {
   username  String   @unique
   password  String
 
-  products Product[]
+  products Product[] 
 }
 
 model Product {
@@ -25,7 +25,7 @@ model Product {
   name        String
   belongsTo   User     @relation(fields: [belongsToId], references: [id])
   belongsToId String
-  updates     Update[]
+  updates     Update[] 
   @@unique([id, belongsToId])
 }
 
