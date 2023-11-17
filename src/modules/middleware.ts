@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
+import { Next, Request, Response } from "../types";
 
-export const protect = (req: Request, res: Response, next: NextFunction) => {
+export const protect = (req: Request, res: Response, next: Next) => {
   const bearer = req.headers.authorization;
   console.log(bearer);
 
@@ -39,11 +39,7 @@ export const protect = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export const handleInputErrot = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const handleInputErrot = (req: Request, res: Response, next: Next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
