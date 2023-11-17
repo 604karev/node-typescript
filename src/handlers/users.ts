@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { hashPassword, createJwt, comparePassword } from "../modules/auth";
-
-const prisma = new PrismaClient();
+import prisma from "../db";
 
 export const createNewUser = async (req: Request, res: Response) => {
   const user = await prisma.user.create({
@@ -23,7 +21,6 @@ export const signin = async (req: Request, res: Response) => {
   if (!user) return;
 
   const isValid = await comparePassword(req.body.password, user.password);
-  console.log(req.body.password, user.password)
 
   if (!isValid) {
     res.status(401);

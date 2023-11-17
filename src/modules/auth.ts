@@ -1,10 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-
-interface User {
-  id: string;
-  username: string;
-}
+import { User } from "@prisma/client";
 
 export const comparePassword = (password: string, hash: string) => {
   return bcrypt.compare(password, hash);
@@ -23,5 +19,3 @@ export const createJwt = (user: User) => {
   );
   return token;
 };
-
-
