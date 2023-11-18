@@ -12,12 +12,9 @@ export const getUpdates = async (req: Request, res: Response) => {
       updates: true,
     },
   });
-  const updates = products.reduce(
-    (acc: Update[][], cur: ProductWithUpdates) => {
-      return [...acc, cur.updates];
-    },
-    []
-  );
+  const updates = products.reduce((acc: Update[], cur: ProductWithUpdates) => {
+    return [...acc, ...cur.updates];
+  }, []);
 
   res.json({ data: updates });
 };
