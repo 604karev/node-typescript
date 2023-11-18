@@ -1,5 +1,7 @@
+import { Update } from "@prisma/client";
 import prisma from "../db";
 import { ProductWithUpdates, Request, Response } from "../types";
+import checkUpdates from "../utils";
 
 export const getUpdates = async (req: Request, res: Response) => {
   const products = await prisma.product.findMany({
@@ -10,9 +12,12 @@ export const getUpdates = async (req: Request, res: Response) => {
       updates: true,
     },
   });
-  const updates = products.reduce((acc: any[], cur: ProductWithUpdates) => {
-    return [...acc, cur.updates];
-  }, []);
+  const updates = products.reduce(
+    (acc: Update[][], cur: ProductWithUpdates) => {
+      return [...acc, cur.updates];
+    },
+    []
+  );
 
   res.json({ data: updates });
 };
@@ -42,21 +47,7 @@ export const createUpdate = async (req: Request, res: Response) => {
 };
 
 export const updateUpdate = async (req: Request, res: Response) => {
-  const products = await prisma.product.findMany({
-    where: {
-      belongsToId: req.user?.id,
-    },
-    include: {
-      updates: true,
-    },
-  });
-  const updates = products.reduce((acc: any[], cur: ProductWithUpdates) => {
-    return [...acc, cur.updates];
-  }, []);
-  const match = updates.find((update) => update.id === req.params.id);
-  if (!match) {
-    return res.json({ message: "Nope" });
-  }
+  checkUpdates(req, res);
   const updateUpdate = await prisma.update.update({
     where: {
       id: req.params.id,
@@ -67,21 +58,7 @@ export const updateUpdate = async (req: Request, res: Response) => {
 };
 
 export const deleteUpdate = async (req: Request, res: Response) => {
-  const products = await prisma.product.findMany({
-    where: {
-      belongsToId: req.user?.id,
-    },
-    include: {
-      updates: true,
-    },
-  });
-  const updates = products.reduce((acc: any[], cur: ProductWithUpdates) => {
-    return [...acc, cur.updates];
-  }, []);
-  const match = updates.find((update) => update.id === req.params.id);
-  if (!match) {
-    return res.json({ message: "Nope" });
-  }
+  checkUpdates(req, res);
   const deleted = await prisma.update.delete({
     where: {
       id: req.params.id,
