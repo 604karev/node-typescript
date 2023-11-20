@@ -1,7 +1,6 @@
 import { Update } from "@prisma/client";
-import prisma from "../db";
 import { ProductWithUpdates, Request, Response } from "../types";
-import checkUpdates from "../utils";
+import { checkUpdates, prisma } from "../utils";
 
 export const getUpdates = async (req: Request, res: Response) => {
   const products = await prisma.product.findMany({
@@ -31,14 +30,19 @@ export const getOneUpdate = async (req: Request, res: Response) => {
 export const createUpdate = async (req: Request, res: Response) => {
   const product = await prisma.product.findUnique({
     where: {
-      id: req.body.id,
+      id: req.body.productId,
     },
   });
   if (!product) {
     return res.json({ message: "nope" });
   }
   const update = await prisma.update.create({
-    data: req.body,
+    data: {
+      title: req.body.title,
+      body: req.body.body,
+      product: { connect: { id: product.id } },
+      asset: req.body.asset
+    },
   });
   res.json({ data: update });
 };

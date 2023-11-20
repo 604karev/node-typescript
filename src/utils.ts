@@ -1,8 +1,10 @@
 import { Update } from "@prisma/client";
-import prisma from "./db";
 import { ProductWithUpdates, Request, Response } from "./types";
+import { PrismaClient } from "@prisma/client";
 
-const checkUpdates = async (req: Request, res: Response) => {
+export const prisma = new PrismaClient();
+
+export const checkUpdates = async (req: Request, res: Response) => {
   const products = await prisma.product.findMany({
     where: {
       belongsToId: req.user?.id,
@@ -21,5 +23,3 @@ const checkUpdates = async (req: Request, res: Response) => {
     return res.json({ message: "Nope" });
   }
 };
-
-export default checkUpdates;

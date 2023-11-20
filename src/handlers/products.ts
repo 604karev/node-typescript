@@ -1,5 +1,5 @@
-import prisma from "../db";
 import { Request, Response } from "../types";
+import { prisma } from "../utils";
 
 export const getProducts = async (req: Request, res: Response) => {
   const user = await prisma.user.findUnique({
