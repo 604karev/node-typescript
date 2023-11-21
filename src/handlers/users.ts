@@ -22,21 +22,26 @@ export const createNewUser = async (
   }
 };
 
-export const signin = async (req: Request, res: Response) => {
-  const user = await prisma.user.findUnique({
-    where: { username: req.body.username },
-  });
+export const signin = async (req: Request, res: Response, next: Next) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { username: req.body.username },
+    });
 
-  if (!user) return;
+    if (!user) return;
 
-  const isValid = await comparePassword(req.body.password, user.password);
+    const isValid = await comparePassword(req.body.password, user.password);
 
-  if (!isValid) {
-    res.status(401);
-    res.send("Invalid username or password");
-    return;
+    if (!isValid) {
+      res.status(401);
+      res.send("Invalid username or password");
+      return;
+    }
+
+    const token = createJwt(user);
+    res.json({ token });
+  } catch (error) {
+    (error as Error).type = "input";
+    next(error);
   }
-
-  const token = createJwt(user);
-  res.json({ token });
 };

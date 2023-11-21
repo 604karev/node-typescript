@@ -1,10 +1,9 @@
 import app from "./server";
 import path from "path";
 import * as dotenv from "dotenv";
+import config from "./config";
 dotenv.config();
 
-const port = 3001;
-
-app.listen(port, () => {
-  console.log(`Server started on http://localhost:${port}`);
+app.listen(config.port, () => {
+  console.log(`Server started on http://localhost:${config.port}`);
 });
