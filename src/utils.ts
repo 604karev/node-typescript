@@ -1,5 +1,5 @@
 import { Update } from "@prisma/client";
-import { ProductWithUpdates, Request, Response } from "./types";
+import { Product, Request, Response } from "./types";
 import { PrismaClient } from "@prisma/client";
 
 export const prisma = new PrismaClient();
@@ -13,7 +13,7 @@ export const checkUpdates = async (req: Request, res: Response) => {
       updates: true,
     },
   });
-  const updates = products.reduce((acc: Update[], cur: ProductWithUpdates) => {
+  const updates = products.reduce((acc: Update[], cur: Product) => {
     return [...acc, ...cur.updates];
   }, []);
 
